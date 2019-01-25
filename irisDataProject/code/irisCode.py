@@ -30,8 +30,7 @@ test_frame = pd.DataFrame()
 for k in test_numbers:
     test_frame = test_frame.append(dataInput.loc[k])
     dataInput = dataInput.drop(k)
-del (test_frame['Iris-Type'])
-
+test_results = test_frame['Iris-Type']
 #---------------------------------------------------
 # Set features
 #---------------------------------------------------
@@ -47,36 +46,41 @@ nonnumeric_columns = ["Iris-Type"]
 ''' As xgboost cannot use catagorical data, you've got to change it into
     intergers instead'''
 #---------------------------------------------------
-le = LabelEncoder()
+encoder = LabelEncoder()
 for feature in nonnumeric_columns:
-    dataInput[feature]  = le.fit_transform(dataInput[feature])
+    dataInput[feature]  = encoder.fit_transform(dataInput[feature])
+    test_frame[feature]  = encoder.fit_transform(test_frame[feature])
+#---------------------------------------------------
+# Prepare data inputs
+#---------------------------------------------------
+train_X = dataInput[0:dataInput.shape[0]].as_matrix()
+test_X = test_frame[0:test_frame.shape[0]].as_matrix()
+train_y = dataInput['Iris-Type']
+print(train_y)
 
 #---------------------------------------------------
-# Set features
-#---------------------------------------------------
-'''
-#---------------------------------------------------
-# Prepare the Data Inputs
-#---------------------------------------------------
-train_X = big_X_imputed[0:train_df.shape[0]].as_matrix()
-test_X = big_X_imputed[train_df.shape[0]::].as_matrix()
-train_y = train_df['Survived']
-
-#---------------------------------------------------
-# Runs XGBoost
+# Run XGBoost
 #---------------------------------------------------
 gbm = xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05).fit(train_X, train_y)
 predictions = gbm.predict(test_X)
 
+print(predictions)
 #---------------------------------------------------
-# Compiles and prints out submission results
+# Prepare output values
 #---------------------------------------------------
-submission = pd.DataFrame({ 'PassengerId': test_df['PassengerId'],
-                            'Survived': predictions })
-submission.to_csv("submission.csv", index=False)
-print(submission)
 
+
+
+
+
+
+
+
+
+
+
+#---------------------------------------------------
+# Based in part on https://www.kaggle.com/datacanary/xgboost-example-python
 #---------------------------------------------------
 #Fin
 #---------------------------------------------------
-'''
