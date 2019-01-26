@@ -30,6 +30,7 @@ test_frame = pd.DataFrame()
 for k in test_numbers:
     test_frame = test_frame.append(dataInput.loc[k])
     dataInput = dataInput.drop(k)
+
 test_results = test_frame['Iris-Type']
 #---------------------------------------------------
 # Set features
@@ -53,9 +54,17 @@ for feature in nonnumeric_columns:
 #---------------------------------------------------
 # Prepare data inputs
 #---------------------------------------------------
+dataInput = dataInput[sorted(dataInput.columns)]
+test_frame = test_frame[sorted(test_frame.columns)]
+
+print(dataInput)
+print(test_frame)
+
 train_X = dataInput[0:dataInput.shape[0]].as_matrix()
 test_X = test_frame[0:test_frame.shape[0]].as_matrix()
 train_y = dataInput['Iris-Type']
+print(train_X)
+print(test_X)
 print(train_y)
 
 #---------------------------------------------------
