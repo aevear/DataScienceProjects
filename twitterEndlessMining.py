@@ -39,11 +39,15 @@ twitterData = tweepy.Cursor(api.search, q=query).items(max_tweets)
 
 #for tweet in twitterData:
 #    print(json.dumps("yo"))
-    #print(json.dumps(tweet.tweet.text))
+    #print(json.dumps(tweet.text))
 
+
+count = 0
 with open("data_file.json", "w") as write_file:
     for tweet in twitterData:
+        print(tweet.created_at, tweet.text)
         json.dump(tweet, write_file)
+        count =+ 1
 
 '''
 print(json.dumps(twitterData))
