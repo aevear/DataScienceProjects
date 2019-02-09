@@ -21,13 +21,13 @@ def importTokens():
 # Code that Actually Pulls from Twitter
 #-------------------------------------------------------------------------------
 def pullFromTwitter(query):
-    #------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     # Set Variables
-    #------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     consumer_key, consumer_secret, access_token, access_secret = importTokens()
-    #------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     # Connect into twitter
-    #------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
 
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_secret)
@@ -35,35 +35,31 @@ def pullFromTwitter(query):
     print("Authenticating now......")
     api = tweepy.API(auth, wait_on_rate_limit=True)
     print("Authenticating done")
-    #------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     # Pull Twitter Data
-    #------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     max_tweets = 2000
 
     print("Begining to pull twitter data")
     twitterData = tweepy.Cursor(api.search, q=query).items(max_tweets)
-    #------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     # Store data in a JSON file
-    #------------------------------------------------------------------------------
-    #with open("data_file.json", "w") as write_file:
-    #    json.dump(twitterData, write_file)
+    #---------------------------------------------------------------------------
+    results = []
+    with open('data/twitterData.json', 'w') as fileout:
+        for tweet in twitterData:
+            tweetParts = {}
+            tweetParts['created_at']     = str(tweet.created_at)
+            tweetParts['text']           = str(tweet.text)
+            tweetParts['favorite_count'] = str(tweet.favorite_count)
+            tweetParts['lang']           = str(tweet.lang)
+            tweetParts['place']          = str(tweet.place)
+            tweetParts['entities']       = str(tweet.entities)
+            results.append(tweetParts)
+        json.dump(results, fileout)
 
-    #for tweet in twitterData:
-    #    print(json.dumps("yo"))
-        #print(json.dumps(tweet.text))
-
-    results = {}
-    for tweet in twitterData:
-        results[str(tweet.created_at)] = str(tweet.text)
-    print("Finished Pulling!")
-    with open("tweetFile.json", "w") as write_file:
-        json.dump(results, write_file)
-
-#-------------------------------------------------------------------------------
-# Makin da import function
-#-------------------------------------------------------------------------------
-query = str(sys.argv[1])
-pullFromTwitter(query)
+    print("Done pulling data")
+    return results
 
 #-------------------------------------------------------------------------------
 # Fin
