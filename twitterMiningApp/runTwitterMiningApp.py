@@ -18,6 +18,7 @@ twitterData = pullFromTwitter(query)
 #-------------------------------------------------------------------------------
 filteredTweets = filterData(twitterData)
 
+#print(filteredTweets)
 
 
 

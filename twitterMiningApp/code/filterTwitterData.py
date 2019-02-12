@@ -18,7 +18,7 @@ import nltk
 #-------------------------------------------------------------------------------
 def filterData(twitterData):
     #---------------------------------------------------------------------------
-    # Set Variables
+    # Get JSON data
     #---------------------------------------------------------------------------
     with open('./data/twitterData.json', 'r') as json_data:
         twitterData = json.load(json_data)
@@ -26,28 +26,22 @@ def filterData(twitterData):
     # Initializing the word counter system
     #---------------------------------------------------------------------------
     punctuation = list(string.punctuation)
-    stop = stopwords.words('english') + punctuation + ['rt', 'via']
-    count_all = Counter()
+    stop = stopwords.words('english') + punctuation + ['rt', 'via', 'RT', 'Our', 'I', 'We']
     #---------------------------------------------------------------------------
     # Look for the top five words in each section
     #---------------------------------------------------------------------------
+    filteredTweets, count_all = [], Counter()
     for tweet in twitterData:
-        completeTerms = tweet["text"]
+        completeTerms = tweet["text"].split(" ")
         #Here we will remove the most common terms and things like spaces
-        for badTerms in stop:
-            completeTerms.strip(badTerms)
-        completeTerms = completeTerms.split(" ")
-        print(completeTerms)
+        updatedCompleteTerms = set(completeTerms) - set(stop)
+        count_all.update(updatedCompleteTerms)
+        filteredTweets.append(updatedCompleteTerms)
+    print(count_all.most_common(5))
+    print(filterTwitterData)
+    return(filteredTweets)
 
-        '''
-        print(completeTerms)
-        count_all.update(completeTerms)
-        terms_single = set(terms_all)
-        # Print the first 5 most frequent words
-        print(count_all.most_common(5))
 
-        terms_stop = [term for term in tweet['text'] if term not in stop]
-        '''
 #-------------------------------------------------------------------------------
 # Fin
 #-------------------------------------------------------------------------------
