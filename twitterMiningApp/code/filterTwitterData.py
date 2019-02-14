@@ -16,11 +16,12 @@ import nltk
 #-------------------------------------------------------------------------------
 # Code that Actually Pulls from Twitter
 #-------------------------------------------------------------------------------
-def filterData(twitterData):
+def filterData(query):
     #---------------------------------------------------------------------------
     # Get JSON data
     #---------------------------------------------------------------------------
-    with open('./data/twitterData.json', 'r') as json_data:
+    dataName = 'data/twitterData' + query + '.json'
+    with open(dataName, 'r') as json_data:
         twitterData = json.load(json_data)
     #---------------------------------------------------------------------------
     # Initializing the word counter system
@@ -30,15 +31,12 @@ def filterData(twitterData):
     #---------------------------------------------------------------------------
     # Look for the top five words in each section
     #---------------------------------------------------------------------------
-    filteredTweets, count_all = [], Counter()
+    filteredTweets = []
     for tweet in twitterData:
         completeTerms = tweet["text"].split(" ")
         #Here we will remove the most common terms and things like spaces
         updatedCompleteTerms = set(completeTerms) - set(stop)
-        count_all.update(updatedCompleteTerms)
-        filteredTweets.append(updatedCompleteTerms)
-    print(count_all.most_common(5))
-    print(filterTwitterData)
+        filteredTweets.append(list(updatedCompleteTerms))
     return(filteredTweets)
 
 

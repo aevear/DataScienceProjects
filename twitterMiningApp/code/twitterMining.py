@@ -46,7 +46,8 @@ def pullFromTwitter(query):
     # Store data in a JSON file
     #---------------------------------------------------------------------------
     results = []
-    with open('data/twitterData.json', 'w') as fileout:
+    dataName = 'data/twitterData' + query + '.json'
+    with open(dataName, 'w') as fileout:
         for tweet in twitterData:
             tweetParts = {}
             tweetParts['created_at']     = str(tweet.created_at)
